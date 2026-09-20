@@ -2,11 +2,7 @@
   "use strict";
 
   const data = window.PROFILE_DATA;
-
-  if (!data) {
-    console.error("未找到 PROFILE_DATA，请检查 profile-data.js 是否正确加载。");
-    return;
-  }
+  if (!data) return;
 
   const escapeHtml = (value = "") =>
     String(value)
@@ -21,209 +17,156 @@
     return /^(https?:\/\/|mailto:|\/|#)/i.test(url) ? escapeHtml(url) : "";
   };
 
+  const externalAttrs = (url) =>
+    url.startsWith("http") ? ' target="_blank" rel="noreferrer"' : "";
+
   document.querySelectorAll("[data-profile]").forEach((element) => {
     const key = element.dataset.profile;
     if (Object.prototype.hasOwnProperty.call(data, key)) {
       element.textContent = data[key];
+      if (!data[key] && element.classList.contains("native-name")) element.hidden = true;
     }
   });
 
-  document.title = `${data.nameEn}｜学术主页`;
+  document.title = `${data.name} | Academic Homepage`;
 
-  const quickLinks = document.querySelector("#quick-links");
-  const visibleLinks = data.links.filter((link) => safeUrl(link.url));
-  quickLinks.innerHTML = visibleLinks
+  const photo = document.querySelector("#profile-photo");
+  const photoPlaceholder = document.querySelector("#photo-placeholder");
+  if (safeUrl(data.photo)) {
+    photo.src = data.photo;
+    photo.alt = `Portrait of ${data.name}`;
+    photo.hidden = false;
+    photoPlaceholder.hidden = true;
+  }
+
+  document.querySelector("#profile-links").innerHTML = data.links
+    .filter((link) => safeUrl(link.url))
     .map(
       (link) => `
-        <li>
-          <a href="${safeUrl(link.url)}" target="_blank" rel="noreferrer">
-            ${escapeHtml(link.label)} <span aria-hidden="true">↗</span>
-          </a>
-        </li>`,
+        <li><a href="${safeUrl(link.url)}"${externalAttrs(link.url)}>${escapeHtml(link.label)}</a></li>`,
     )
     .join("");
 
-  document.querySelector("#about-copy").innerHTML = data.about
-    .map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`)
+  document.querySelector("#interest-list").innerHTML = data.researchInterests
+    .map((interest) => `<li>${escapeHtml(interest)}</li>`)
     .join("");
 
-  document.querySelector("#profile-facts").innerHTML = data.facts
-    .map(
-      (fact) => `
-        <div class="fact-row">
-          <dt>${escapeHtml(fact.label)}</dt>
-          <dd>${escapeHtml(fact.value)}</dd>
-        </div>`,
-    )
-    .join("");
-
-  document.querySelector("#metrics").innerHTML = data.metrics
-    .map(
-      (metric) => `
-        <div class="metric">
-          <strong>${escapeHtml(metric.value)}</strong>
-          <span>${escapeHtml(metric.label)}</span>
-        </div>`,
-    )
-    .join("");
-
-  document.querySelector("#research-grid").innerHTML = data.research
+  document.querySelector("#education-list").innerHTML = data.education
     .map(
       (item) => `
-        <article class="research-card reveal">
-          <div class="card-number">${escapeHtml(item.number)}</div>
-          <p class="card-overline">${escapeHtml(item.titleEn)}</p>
-          <h3>${escapeHtml(item.title)}</h3>
-          <p>${escapeHtml(item.description)}</p>
-          <ul class="tag-list">
-            ${item.keywords.map((keyword) => `<li>${escapeHtml(keyword)}</li>`).join("")}
-          </ul>
+        <article class="education-item">
+          <h3>${escapeHtml(item.degree)}</h3>
+          <p>${escapeHtml(item.institution)}</p>
+          <time>${escapeHtml(item.period)}</time>
         </article>`,
     )
     .join("");
 
+  document.querySelector("#bio").innerHTML = data.bio
+    .map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`)
+    .join("");
+
+  document.querySelector("#news-list").innerHTML = data.news
+    .map((item) => {
+      const text = safeUrl(item.url)
+        ? `<a href="${safeUrl(item.url)}"${externalAttrs(item.url)}>${escapeHtml(item.text)}</a>`
+        : escapeHtml(item.text);
+      return `<article class="news-item"><time>${escapeHtml(item.date)}</time><p>${text}</p></article>`;
+    })
+    .join("");
+
+  document.querySelector("#research-list").innerHTML = data.research
+    .map(
+      (item, index) => `
+        <article class="research-item">
+          <span class="item-number">${String(index + 1).padStart(2, "0")}</span>
+          <div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.description)}</p></div>
+        </article>`,
+    )
+    .join("");
+
+  const allPublicationsLink = document.querySelector("#all-publications-link");
+  if (safeUrl(data.publicationsUrl)) {
+    allPublicationsLink.href = data.publicationsUrl;
+    allPublicationsLink.hidden = false;
+    allPublicationsLink.target = "_blank";
+    allPublicationsLink.rel = "noreferrer";
+  }
+
   document.querySelector("#publication-list").innerHTML = data.publications
-    .map((publication, index) => {
-      const links = publication.links
+    .map((item) => {
+      const links = item.links
         .filter((link) => safeUrl(link.url))
         .map(
-          (link) => `
-            <a href="${safeUrl(link.url)}" target="_blank" rel="noreferrer">
-              ${escapeHtml(link.label)} ↗
-            </a>`,
+          (link) =>
+            `<a href="${safeUrl(link.url)}"${externalAttrs(link.url)}>[${escapeHtml(link.label)}]</a>`,
         )
-        .join("");
+        .join(" ");
 
       return `
-        <article class="publication-item reveal">
-          <div class="publication-count">${String(index + 1).padStart(2, "0")}</div>
-          <div class="publication-year">${escapeHtml(publication.year)}</div>
-          <div class="publication-main">
-            <div class="publication-meta">
-              <span>${escapeHtml(publication.type)}</span>
-              ${publication.note ? `<mark>${escapeHtml(publication.note)}</mark>` : ""}
+        <li class="publication-item">
+          <div class="publication-year">${escapeHtml(item.year)}</div>
+          <div class="publication-content">
+            <h3>${escapeHtml(item.title)}</h3>
+            <p class="publication-authors">${escapeHtml(item.authors)}</p>
+            <p class="publication-venue"><em>${escapeHtml(item.venue)}</em>${item.details ? `, ${escapeHtml(item.details)}` : ""}.</p>
+            <div class="publication-actions">
+              ${item.status ? `<span class="status-label">${escapeHtml(item.status)}</span>` : ""}${links}
             </div>
-            <h3>${escapeHtml(publication.title)}</h3>
-            <p class="publication-authors">${escapeHtml(publication.authors)}</p>
-            <p class="publication-venue">${escapeHtml(publication.venue)}</p>
           </div>
-          <div class="publication-links">${links}</div>
-        </article>`;
+        </li>`;
     })
     .join("");
 
-  document.querySelector("#project-grid").innerHTML = data.projects
-    .map((project) => {
-      const title = safeUrl(project.url)
-        ? `<a href="${safeUrl(project.url)}" target="_blank" rel="noreferrer">${escapeHtml(project.title)} ↗</a>`
-        : escapeHtml(project.title);
-
+  document.querySelector("#project-list").innerHTML = data.projects
+    .map((item) => {
+      const title = safeUrl(item.url)
+        ? `<a href="${safeUrl(item.url)}"${externalAttrs(item.url)}>${escapeHtml(item.title)}</a>`
+        : escapeHtml(item.title);
       return `
-        <article class="project-card reveal">
-          <p class="project-period">${escapeHtml(project.period)}</p>
-          <h3>${title}</h3>
-          <p>${escapeHtml(project.description)}</p>
-          <ul class="tag-list">
-            ${project.tags.map((tag) => `<li>${escapeHtml(tag)}</li>`).join("")}
-          </ul>
+        <article class="project-item">
+          <div class="project-heading"><h3>${title}</h3><time>${escapeHtml(item.period)}</time></div>
+          <p class="project-role">${escapeHtml(item.role)}</p>
+          <p>${escapeHtml(item.description)}</p>
         </article>`;
     })
     .join("");
 
-  document.querySelector("#timeline").innerHTML = data.timeline
+  document.querySelector("#experience-list").innerHTML = data.experience
     .map(
       (item) => `
-        <article class="timeline-item reveal">
-          <div class="timeline-year">${escapeHtml(item.year)}</div>
-          <div class="timeline-dot" aria-hidden="true"></div>
-          <div class="timeline-content">
+        <article class="experience-item">
+          <time>${escapeHtml(item.period)}</time>
+          <div>
+            <span class="experience-category">${escapeHtml(item.category)}</span>
             <h3>${escapeHtml(item.title)}</h3>
-            <p class="timeline-organization">${escapeHtml(item.organization)}</p>
+            <p class="experience-organization">${escapeHtml(item.organization)}</p>
             <p>${escapeHtml(item.description)}</p>
           </div>
         </article>`,
     )
     .join("");
 
-  const emailLink = document.querySelector("#email-link");
-  emailLink.href = `mailto:${data.email}`;
-
-  const copyButton = document.querySelector("#copy-email");
-  copyButton.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(data.email);
-      copyButton.textContent = "已复制 ✓";
-    } catch (_error) {
-      copyButton.textContent = data.email;
-    }
-    window.setTimeout(() => {
-      copyButton.textContent = "复制邮箱";
-    }, 2000);
+  document.querySelector("#email-link").href = `mailto:${data.email}`;
+  const currentDate = new Date();
+  document.querySelector("#current-year").textContent = currentDate.getFullYear();
+  document.querySelector("#last-updated").textContent = currentDate.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
   });
 
-  document.querySelector("#current-year").textContent = new Date().getFullYear();
-
-  const menuButton = document.querySelector(".menu-toggle");
-  const nav = document.querySelector(".site-nav");
-
+  const menuButton = document.querySelector(".menu-button");
+  const navigation = document.querySelector(".site-nav");
   menuButton.addEventListener("click", () => {
-    const isOpen = menuButton.getAttribute("aria-expanded") === "true";
-    menuButton.setAttribute("aria-expanded", String(!isOpen));
-    nav.classList.toggle("is-open", !isOpen);
-    document.body.classList.toggle("menu-open", !isOpen);
+    const open = menuButton.getAttribute("aria-expanded") === "true";
+    menuButton.setAttribute("aria-expanded", String(!open));
+    navigation.classList.toggle("is-open", !open);
   });
 
-  nav.querySelectorAll("a").forEach((link) => {
+  navigation.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", () => {
       menuButton.setAttribute("aria-expanded", "false");
-      nav.classList.remove("is-open");
-      document.body.classList.remove("menu-open");
+      navigation.classList.remove("is-open");
     });
   });
-
-  const themeButton = document.querySelector(".theme-toggle");
-  const savedTheme = localStorage.getItem("academic-theme");
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-  if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
-    document.documentElement.dataset.theme = "dark";
-  }
-
-  themeButton.addEventListener("click", () => {
-    const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-    document.documentElement.dataset.theme = nextTheme;
-    localStorage.setItem("academic-theme", nextTheme);
-  });
-
-  const revealElements = [...document.querySelectorAll(".reveal")];
-  const revealInViewport = () => {
-    revealElements.forEach((element) => {
-      if (
-        !element.classList.contains("is-visible") &&
-        element.getBoundingClientRect().top < window.innerHeight * 0.92
-      ) {
-        element.classList.add("is-visible");
-      }
-    });
-  };
-
-  window.addEventListener("scroll", revealInViewport, { passive: true });
-  revealInViewport();
-
-  const sections = [...document.querySelectorAll("main section[id]")];
-  const navLinks = [...nav.querySelectorAll("a")];
-
-  const updateActiveLink = () => {
-    const marker = window.scrollY + window.innerHeight * 0.28;
-    let currentId = sections[0]?.id;
-    sections.forEach((section) => {
-      if (section.offsetTop <= marker) currentId = section.id;
-    });
-    navLinks.forEach((link) => {
-      link.classList.toggle("is-active", link.hash === `#${currentId}`);
-    });
-  };
-
-  window.addEventListener("scroll", updateActiveLink, { passive: true });
-  updateActiveLink();
 })();

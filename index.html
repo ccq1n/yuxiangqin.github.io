@@ -1,178 +1,119 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Yuxiang Qin 的学术个人主页，展示研究方向、学术成果、代表项目与个人经历。"
-    />
-    <meta name="theme-color" content="#f5f1e8" />
-    <title>Yuxiang Qin｜学术主页</title>
+    <meta name="description" content="The academic homepage of Yuxiang Qin — research, publications, projects, and academic experience." />
+    <meta name="theme-color" content="#ffffff" />
+    <title>Yuxiang Qin | Academic Homepage</title>
     <link rel="stylesheet" href="styles.css" />
     <script src="profile-data.js" defer></script>
     <script src="script.js" defer></script>
   </head>
   <body>
-    <a class="skip-link" href="#main-content">跳转到主要内容</a>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
 
-    <header class="site-header" id="top">
-      <a class="brand" href="#top" aria-label="返回首页">
-        <span class="brand-mark" aria-hidden="true">YQ</span>
-        <span class="brand-text">Yuxiang Qin</span>
-      </a>
-
-      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
-        <span></span><span></span><span></span>
-        <span class="sr-only">打开导航菜单</span>
-      </button>
-
-      <nav class="site-nav" id="site-nav" aria-label="主要导航">
-        <a href="#about">关于我</a>
-        <a href="#research">研究方向</a>
-        <a href="#publications">学术成果</a>
-        <a href="#projects">项目经历</a>
-        <a href="#honors">荣誉经历</a>
-        <a href="#contact">联系我</a>
-      </nav>
-
-      <button class="theme-toggle" type="button" aria-label="切换深色模式" title="切换深色模式">
-        <span class="theme-icon" aria-hidden="true">◐</span>
-      </button>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="site-name" href="#about" data-profile="name">Yuxiang Qin</a>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">
+          <span>Menu</span><i aria-hidden="true"></i>
+        </button>
+        <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+          <a href="#about">About</a>
+          <a href="#news">News</a>
+          <a href="#research">Research</a>
+          <a href="#publications">Publications</a>
+          <a href="#projects">Projects</a>
+          <a href="#experience">Experience</a>
+        </nav>
+      </div>
     </header>
 
-    <main id="main-content">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-grid"></div>
-        <div class="hero-content reveal">
-          <p class="eyebrow" id="hero-eyebrow">ACADEMIC PROFILE · 2026</p>
-          <h1 id="hero-title">
-            <span class="hero-greeting">你好，我是</span>
-            <span class="hero-name" data-profile="nameEn">Yuxiang Qin</span>
-          </h1>
-          <p class="hero-role" data-profile="role">研究者 / 在读学生</p>
-          <p class="hero-intro" data-profile="shortBio">
-            我关注有价值的问题，也相信严谨、开放与协作能够让研究走得更远。
+    <main class="page-layout" id="main-content">
+      <aside class="profile-column" aria-label="Profile information">
+        <div class="profile-photo-wrap">
+          <img class="profile-photo" id="profile-photo" alt="Portrait of Yuxiang Qin" hidden />
+          <div class="photo-placeholder" id="photo-placeholder"><span data-profile="initials">YQ</span></div>
+        </div>
+
+        <div class="profile-summary">
+          <h1 data-profile="name">Yuxiang Qin</h1>
+          <p class="native-name" data-profile="nativeName"></p>
+          <p class="profile-role" data-profile="position">Researcher</p>
+          <p class="profile-affiliation">
+            <span data-profile="department">Department / School</span><br />
+            <span data-profile="institution">University / Institution</span>
           </p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#publications">查看学术成果</a>
-            <a class="button button-secondary" href="#contact">与我联系</a>
-          </div>
-          <ul class="quick-links" aria-label="学术主页链接" id="quick-links"></ul>
+          <p class="profile-location" data-profile="location">City, Country</p>
         </div>
 
-        <aside class="identity-card reveal" aria-label="个人信息卡片">
-          <div class="portrait-placeholder" id="portrait-placeholder" aria-label="头像占位">
-            <span data-profile="initials">YQ</span>
-            <div class="orbit orbit-one"></div>
-            <div class="orbit orbit-two"></div>
-          </div>
-          <div class="identity-copy">
-            <p class="identity-label">RESEARCHER</p>
-            <h2 data-profile="nameZh">姓名待补充</h2>
-            <p data-profile="affiliation">所在院校 / 研究机构</p>
-            <p data-profile="location">中国</p>
-          </div>
-          <div class="availability">
-            <span class="status-dot" aria-hidden="true"></span>
-            <span data-profile="status">期待学术交流与合作</span>
-          </div>
-        </aside>
+        <ul class="profile-links" id="profile-links" aria-label="External profile links"></ul>
 
-        <a class="scroll-cue" href="#about" aria-label="向下浏览">
-          <span>SCROLL</span>
-          <i aria-hidden="true"></i>
-        </a>
-      </section>
+        <section class="sidebar-section" aria-labelledby="interest-title">
+          <h2 id="interest-title">Research Interests</h2>
+          <ul id="interest-list"></ul>
+        </section>
 
-      <section class="section about-section" id="about" aria-labelledby="about-title">
-        <div class="section-heading reveal">
-          <span class="section-index">01</span>
-          <div>
-            <p class="section-kicker">ABOUT</p>
-            <h2 id="about-title">关于我</h2>
-          </div>
-        </div>
-        <div class="about-layout">
-          <div class="about-copy reveal" id="about-copy"></div>
-          <dl class="profile-facts reveal" id="profile-facts"></dl>
-        </div>
-        <div class="metrics reveal" id="metrics" aria-label="学术数据概览"></div>
-      </section>
+        <section class="sidebar-section" aria-labelledby="education-title">
+          <h2 id="education-title">Education</h2>
+          <div id="education-list"></div>
+        </section>
+      </aside>
 
-      <section class="section research-section" id="research" aria-labelledby="research-title">
-        <div class="section-heading reveal">
-          <span class="section-index">02</span>
-          <div>
-            <p class="section-kicker">RESEARCH</p>
-            <h2 id="research-title">研究方向</h2>
-          </div>
-        </div>
-        <p class="section-lead reveal">
-          围绕核心问题开展长期探索，并通过跨学科视角寻找新的研究可能。
-        </p>
-        <div class="research-grid" id="research-grid"></div>
-      </section>
+      <div class="content-column">
+        <section class="content-section intro-section" id="about" aria-labelledby="about-title">
+          <p class="section-label">Academic Profile</p>
+          <h2 id="about-title">About Me</h2>
+          <div class="bio" id="bio"></div>
+        </section>
 
-      <section class="section publications-section" id="publications" aria-labelledby="publications-title">
-        <div class="section-heading-row reveal">
-          <div class="section-heading">
-            <span class="section-index">03</span>
-            <div>
-              <p class="section-kicker">PUBLICATIONS</p>
-              <h2 id="publications-title">学术成果</h2>
-            </div>
+        <section class="content-section" id="news" aria-labelledby="news-title">
+          <div class="section-title-row">
+            <h2 id="news-title">News</h2><span class="section-note">Selected updates</span>
           </div>
-          <p class="heading-note">* 表示共同贡献；完整列表将持续更新</p>
-        </div>
-        <div class="publication-list" id="publication-list"></div>
-      </section>
+          <div class="news-list" id="news-list"></div>
+        </section>
 
-      <section class="section projects-section" id="projects" aria-labelledby="projects-title">
-        <div class="section-heading reveal">
-          <span class="section-index">04</span>
-          <div>
-            <p class="section-kicker">SELECTED PROJECTS</p>
-            <h2 id="projects-title">代表项目</h2>
-          </div>
-        </div>
-        <div class="project-grid" id="project-grid"></div>
-      </section>
+        <section class="content-section" id="research" aria-labelledby="research-title">
+          <h2 id="research-title">Research</h2>
+          <p class="section-introduction" data-profile="researchIntroduction"></p>
+          <div class="research-list" id="research-list"></div>
+        </section>
 
-      <section class="section honors-section" id="honors" aria-labelledby="honors-title">
-        <div class="section-heading reveal">
-          <span class="section-index">05</span>
-          <div>
-            <p class="section-kicker">EXPERIENCE & HONORS</p>
-            <h2 id="honors-title">经历与荣誉</h2>
+        <section class="content-section" id="publications" aria-labelledby="publications-title">
+          <div class="section-title-row">
+            <h2 id="publications-title">Selected Publications</h2>
+            <a class="text-link" id="all-publications-link" href="#" hidden>View all publications →</a>
           </div>
-        </div>
-        <div class="timeline" id="timeline"></div>
-      </section>
+          <p class="publication-note">Names are listed in publication order. <sup>*</sup> denotes equal contribution.</p>
+          <ol class="publication-list" id="publication-list"></ol>
+        </section>
 
-      <section class="contact-section" id="contact" aria-labelledby="contact-title">
-        <div class="contact-inner reveal">
-          <p class="section-kicker">LET'S CONNECT</p>
-          <h2 id="contact-title">期待与你交流<br />有意思的研究。</h2>
-          <p data-profile="contactText">
-            欢迎通过邮件联系我，讨论研究合作、学术访问或其他可能性。
-          </p>
-          <div class="contact-actions">
-            <a class="button button-light" id="email-link" href="mailto:your.email@example.com">
-              发送邮件
-            </a>
-            <button class="copy-email" id="copy-email" type="button">复制邮箱</button>
-          </div>
-          <span class="contact-email" data-profile="email">your.email@example.com</span>
-        </div>
-        <div class="contact-mark" aria-hidden="true">YQ</div>
-      </section>
+        <section class="content-section" id="projects" aria-labelledby="projects-title">
+          <h2 id="projects-title">Selected Projects</h2>
+          <div class="project-list" id="project-list"></div>
+        </section>
+
+        <section class="content-section" id="experience" aria-labelledby="experience-title">
+          <h2 id="experience-title">Experience &amp; Honors</h2>
+          <div class="experience-list" id="experience-list"></div>
+        </section>
+
+        <section class="content-section contact-section" id="contact" aria-labelledby="contact-title">
+          <h2 id="contact-title">Contact</h2>
+          <p data-profile="contactText"></p>
+          <p class="contact-email">Email: <a id="email-link" href="mailto:your.email@example.com" data-profile="email"></a></p>
+        </section>
+      </div>
     </main>
 
     <footer class="site-footer">
-      <p>© <span id="current-year"></span> <span data-profile="nameEn">Yuxiang Qin</span></p>
-      <p>以好奇心提出问题，以严谨回应世界。</p>
-      <a href="#top">返回顶部 ↑</a>
+      <div>
+        <span>© <span id="current-year"></span> <span data-profile="name">Yuxiang Qin</span>.</span>
+        <span>Last updated <span id="last-updated"></span>.</span>
+      </div>
+      <a href="#about">Back to top ↑</a>
     </footer>
   </body>
 </html>
